@@ -1,0 +1,20 @@
+# ## Web Framework & Server ###
+fastapi
+uvicorn[standard]
+
+# ## AI & Machine Learning ###
+
+torch
+transformers
+accelerate # Helps to efficiently run models on any hardware (CPU/GPU)
+sentencepiece # A common tokenizer required by many transformer models
+
+# ## Static Analysis Tools ###
+
+pylint
+flake8  # A great linter for style and simple errors
+bandit  # For finding common security issues
+radon   # For checking code complexity
+
+# ## Utilities ###
+python-dotenv # For managing environment variables (best practice)

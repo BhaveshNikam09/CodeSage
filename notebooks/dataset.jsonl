@@ -1,0 +1,6 @@
+
+
+{"code": "def safe_divide(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return None", "label": 0}
+{"code": "def buggy_divide(a, b):\n    return a / b", "label": 1}
+{"code": "def process_data(data):\n    if not data:\n        return\n    print(data[0])", "label": 0}
+{"code": "def vulnerable_process(data):\n    print(data[0])", "label": 1}

@@ -1,0 +1,113 @@
+{
+  "patterns": [
+    {
+      "id": "learned_1",
+      "severity": "high",
+      "description": "'b' is a special type for rounding errors. Add error handling to handle the ZeroDivisionError.",
+      "patterns": [
+        "def\\s+divide_numbers",
+        "\\/\\s*[a-zA-Z_]"
+      ],
+      "examples": [
+        "def divide_numbers(a, b):\n    return a / b"
+      ],
+      "learned_at": "2025-10-29T08:29:18.414151",
+      "detection_count": 2
+    },
+    {
+      "id": "learned_2",
+      "severity": "medium",
+      "description": "Use os.system(f\"echo {cmd}\") instead of 'echo sys.stdout' to avoid a deadlock.",
+      "patterns": [
+        "def\\s+run_command",
+        "os\\.system\\s*\\("
+      ],
+      "examples": [
+        "def run_command(cmd):\n    os.system(f\"echo {cmd}\")"
+      ],
+      "learned_at": "2025-10-29T08:29:22.811748",
+      "detection_count": 2
+    },
+    {
+      "id": "learned_3",
+      "severity": "medium",
+      "description": "For item in items: print(item).",
+      "patterns": [
+        "def\\s+process_items"
+      ],
+      "examples": [
+        "def process_items(items):\n    for i in range(len(items)):\n        print(items[i])"
+      ],
+      "learned_at": "2025-10-29T08:29:24.661890",
+      "detection_count": 1
+    },
+    {
+      "id": "learned_4",
+      "severity": "high",
+      "description": "'load_file' function may raise a IOError if the file doesn't exist. Add error handling to handle the error.",
+      "patterns": [
+        "def\\s+load_file"
+      ],
+      "examples": [
+        "def load_file(path):\n    f = open(path, 'r')\n    data = f.read()\n    return data"
+      ],
+      "learned_at": "2025-10-29T08:29:28.312573",
+      "detection_count": 1
+    },
+    {
+      "id": "learned_5",
+      "severity": "high",
+      "description": "Potential division by zero - add validation before division",
+      "patterns": [
+        "\\/\\s*\\w"
+      ],
+      "learned_at": "2025-10-29T08:36:22.117726",
+      "detection_count": 1
+    },
+    {
+      "id": "learned_6",
+      "severity": "critical",
+      "description": "Command injection risk - use subprocess.run() with shell=False",
+      "patterns": [
+        "os\\.system"
+      ],
+      "learned_at": "2025-10-29T08:36:31.770813",
+      "detection_count": 1
+    },
+    {
+      "id": "learned_7",
+      "severity": "medium",
+      "description": "Use enumerate() instead of range(len()) for better readability",
+      "patterns": [
+        "def\\ process_items\\(items\\):\\\n\\ \\ \\ \\ "
+      ],
+      "learned_at": "2025-10-29T08:36:38.700855",
+      "detection_count": 1
+    },
+    {
+      "id": "learned_8",
+      "severity": "medium",
+      "description": "File not closed properly - use 'with open()' context manager",
+      "patterns": [
+        "def\\ load_file\\(path\\):\\\n\\ \\ \\ \\ f\\ =\\ o"
+      ],
+      "learned_at": "2025-10-29T08:36:48.771527",
+      "detection_count": 1
+    },
+    {
+      "id": "learned_9",
+      "description": "Use the 'echo' command instead. Consider adding a 'echo' command to the shell instead. Consider adding a 'echo' command to the command line instead.",
+      "severity": "medium",
+      "learned_at": "2025-10-29T08:38:57.253374"
+    },
+    {
+      "id": "learned_10",
+      "description": "Use eval() instead of eval() as a fallback. Consider adding a try-except block instead.",
+      "severity": "medium",
+      "learned_at": "2025-10-29T08:38:57.253374"
+    }
+  ],
+  "keywords": [],
+  "ast_signatures": [],
+  "ml_learned": []
+}
