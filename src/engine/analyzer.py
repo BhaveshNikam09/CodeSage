@@ -155,44 +155,77 @@ class StaticAnalyzer:
     def _check_undefined_vars(self, func_node: ast.FunctionDef, code: str) -> List[Dict]:
         """Check for undefined or typo variables in function."""
         issues = []
+        lines = code.splitlines()
         
         try:
-            # Get all variable assignments in function
             assigned_vars = set()
-            used_vars = set()
+            used_vars = []
+
+            for arg in (
+                list(func_node.args.posonlyargs)
+                + list(func_node.args.args)
+                + list(func_node.args.kwonlyargs)
+            ):
+                assigned_vars.add(arg.arg)
+            if func_node.args.vararg:
+                assigned_vars.add(func_node.args.vararg.arg)
+            if func_node.args.kwarg:
+                assigned_vars.add(func_node.args.kwarg.arg)
             
             for node in ast.walk(func_node):
-                # Variables being assigned
                 if isinstance(node, ast.Assign):
                     for target in node.targets:
-                        if isinstance(target, ast.Name):
-                            assigned_vars.add(target.id)
+                        assigned_vars.update(self._target_names(target))
+                if isinstance(node, ast.AnnAssign):
+                    assigned_vars.update(self._target_names(node.target))
+                if isinstance(node, ast.AugAssign):
+                    assigned_vars.update(self._target_names(node.target))
+                if isinstance(node, (ast.For, ast.AsyncFor)):
+                    assigned_vars.update(self._target_names(node.target))
+                if isinstance(node, (ast.With, ast.AsyncWith)):
+                    for item in node.items:
+                        if item.optional_vars:
+                            assigned_vars.update(self._target_names(item.optional_vars))
+                if isinstance(node, ast.Import):
+                    for alias in node.names:
+                        assigned_vars.add(alias.asname or alias.name.split(".")[0])
+                if isinstance(node, ast.ImportFrom):
+                    for alias in node.names:
+                        assigned_vars.add(alias.asname or alias.name)
                 
-                # Variables being used
                 if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
-                    used_vars.add(node.id)
+                    used_vars.append(node)
             
-            # Check for typos/undefined variables
-            # Common pattern: assigned 'data' but returned 'da' or 'dat'
-            for used in used_vars:
+            for used_node in used_vars:
+                used = used_node.id
                 if used not in assigned_vars and used not in dir(__builtins__):
-                    # Check if it looks like a typo
                     for assigned in assigned_vars:
                         if assigned.startswith(used) and len(assigned) > len(used):
+                            line = used_node.lineno
                             issues.append({
-                                'line': func_node.lineno,
-                                'column': 0,
+                                'line': line,
+                                'column': used_node.col_offset,
                                 'severity': 'critical',
                                 'message': f'Undefined variable "{used}" - possibly typo of "{assigned}"',
                                 'fix': f'Change "{used}" to "{assigned}"',
                                 'type': 'bug',
-                                'code_snippet': f'return {used}'
+                                'code_snippet': lines[line - 1].strip() if 0 < line <= len(lines) else used
                             })
                             break
         except:
             pass
         
         return issues
+
+    def _target_names(self, target) -> set:
+        if isinstance(target, ast.Name):
+            return {target.id}
+        if isinstance(target, (ast.Tuple, ast.List)):
+            names = set()
+            for item in target.elts:
+                names.update(self._target_names(item))
+            return names
+        return set()
     
     def _complexity_scan(self, code: str) -> Dict:
         """Cyclomatic complexity analysis."""

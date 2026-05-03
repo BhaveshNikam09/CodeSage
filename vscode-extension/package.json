@@ -1,0 +1,79 @@
+{
+  "name": "codesage-pr-assistant",
+  "displayName": "CodeSage PR Assistant",
+  "description": "AI code reviewer and PR assistant for CodeSage.",
+  "version": "0.1.0",
+  "publisher": "codesage",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Linters", "Other"],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:codesage.analyzeCode",
+    "onCommand:codesage.applyAllFixes",
+    "onCommand:codesage.generatePrReview",
+    "onCommand:codesage.reviewWithCodeSage",
+    "onCommand:codesage.reviewGitHubPullRequest"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "CodeSage",
+      "properties": {
+        "codesage.backendUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:5000",
+          "description": "CodeSage backend URL."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "codesage.analyzeCode",
+        "title": "CodeSage: Analyze Code"
+      },
+      {
+        "command": "codesage.applyAllFixes",
+        "title": "CodeSage: Apply All Fixes"
+      },
+      {
+        "command": "codesage.generatePrReview",
+        "title": "CodeSage: Generate PR Review"
+      },
+      {
+        "command": "codesage.reviewWithCodeSage",
+        "title": "Review with CodeSage"
+      },
+      {
+        "command": "codesage.reviewGitHubPullRequest",
+        "title": "CodeSage: Review GitHub Pull Request"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "codesage.analyzeCode",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "codesage.analyzeCode"
+        },
+        {
+          "command": "codesage.applyAllFixes"
+        },
+        {
+          "command": "codesage.generatePrReview"
+        },
+        {
+          "command": "codesage.reviewWithCodeSage"
+        },
+        {
+          "command": "codesage.reviewGitHubPullRequest"
+        }
+      ]
+    }
+  }
+}

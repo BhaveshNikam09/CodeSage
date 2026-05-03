@@ -1,0 +1,1 @@
+"""PR assistant package."""

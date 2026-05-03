@@ -1,4 +1,6 @@
 # ## Web Framework & Server ###
+flask
+gunicorn
 fastapi
 uvicorn[standard]
 
@@ -18,3 +20,4 @@ radon   # For checking code complexity
 
 # ## Utilities ###
 python-dotenv # For managing environment variables (best practice)
+pytest

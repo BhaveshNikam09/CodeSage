@@ -1,11 +1,31 @@
+import os
+import sys
+
+SRC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
+
+try:
+    from dotenv import load_dotenv
+
+    PROJECT_ROOT = os.path.abspath(os.path.join(SRC_DIR, ".."))
+    load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
+except Exception:
+    pass
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except AttributeError:
+    pass
+
 from flask import Flask, render_template, request, jsonify
 from routes.analyze import analyze_bp
 from routes.feedback import feedback_bp
+from routes.pr_assistant import pr_bp
 from werkzeug.utils import secure_filename
 from utils.config_loader import ConfigLoader
 from utils.logger import Logger
 from models.load_model import check_model_exists, get_model_info
-import os
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -21,6 +41,7 @@ logger = Logger.setup()
 # Register blueprints
 app.register_blueprint(analyze_bp, url_prefix='/api')
 app.register_blueprint(feedback_bp, url_prefix='/api')
+app.register_blueprint(pr_bp, url_prefix='/api')
 
 # Ensure required directories exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
